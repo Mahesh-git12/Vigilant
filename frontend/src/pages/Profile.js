@@ -52,7 +52,7 @@ export default function Profile() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%)',
+      background: 'linear-gradient(120deg,#e0c3fc 0%,#8ec5fc 100%)'
     }}>
       <Card sx={{ maxWidth: 420, width: '100%', p: 2 }}>
         <CardContent>
