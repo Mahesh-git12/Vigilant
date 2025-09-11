@@ -90,18 +90,20 @@ export default function Profile() {
   return (
     <Box
       sx={{
+        width: '100vw',
         minHeight: '100vh',
+        background: 'linear-gradient(120deg,#e0c3fc 0%,#8ecffc 100%)',
         display: 'flex',
-        alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(120deg,#e0c3fc 0%,#8ec5fc 100%)',
+        alignItems: 'center',
         p: isMobile ? 2 : 4,
+        boxSizing: 'border-box',
       }}
     >
       <Card
         sx={{
-          maxWidth: isMobile ? '100%' : 440,
           width: '100%',
+          maxWidth: 440,
           p: isMobile ? 2 : 3,
           borderRadius: 4,
           boxShadow: '0 8px 24px rgba(106,130,251,0.25)',
