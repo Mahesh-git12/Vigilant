@@ -31,7 +31,7 @@ A modern web and mobile safety platform for quick emergency alerting, trusted co
 
 ## Getting Started
 
-git clone https://github.com/your-username/vigilant-safety-app.git
+git clone https://github.com/your-username/vigilant-safety-app.git /
 cd vigilant-safety-app
 npm install
 
