@@ -6,11 +6,20 @@ A modern web and mobile safety platform for quick emergency alerting, trusted co
 
 ## Features
 
-- Secure registration/login (JWT authentication)
-- Add/manage emergency contacts
-- Fast incident reporting with live geolocation
-- Glassmorphism & responsive UI
-- Installable PWA for app-like use on mobile
+- **User Authentication:** Register, login, and protect your session with JWT tokens.
+- **Add & Manage Emergency Contacts:** Trusted contacts get notified in an emergency.
+- **SOS / Panic Button:** Instantly alert contacts with location in a crisis.
+- **Live Location Sharing:** Shares user’s real-time geolocation on incident report.
+- **Incident Reporting:** Users can report incidents of any type with contextual info.
+- **Incident History:** View your past reported incidents and their status.
+- **Responsive UI:** Fully adapts to phones, tablets, and desktops.
+- **Glassmorphism & Modern Design:** Attractive, accessible card-based layouts.
+- **Progressive Web App (PWA):** Install on mobile for fullscreen & offline use.
+- **Custom Alerts:** Success/error notifications for all user actions.
+- **Secure:** Passwords hashed, secure cookies/tokens, HTTPS in production.
+- **CORS-Restricted API:** Only allows requests from trusted domains.
+- **Role-Based Access (optional):** Different views for user/admin (if implemented).
+- **Easy Deployment:** Vercel frontend, API can be deployed anywhere.
 
 ---
 
