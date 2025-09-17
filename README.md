@@ -25,7 +25,7 @@ A modern web and mobile safety platform for quick emergency alerting, trusted co
 - React, Material-UI, Axios
 - Node.js + Express API (example backend)
 - MongoDB/SQL
-- Vercel (Frontend hosting), HTTPS
+- Vercel (Frontend hosting), Render
 
 ---
 
