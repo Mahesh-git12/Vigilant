@@ -31,9 +31,9 @@ A modern web and mobile safety platform for quick emergency alerting, trusted co
 ## Tech Stack
 
 - React, Material-UI, Axios
-- Node.js + Express API (example backend)
-- MongoDB/SQL
-- Vercel (Frontend hosting), Render
+- Node.js + Express API 
+- MongoDB Atlas
+- Vercel (Frontend hosting), Render (Backend Deployment)
 
 ---
 
