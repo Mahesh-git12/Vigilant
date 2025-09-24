@@ -40,14 +40,14 @@ async function sendNearestUserEmailNotification(toEmail, helperName, senderName,
   const mailOptions = {
     from: `"Women Safety App" <${process.env.EMAIL_USER}>`,
     to: toEmail,
-    subject: '?? SOS Alert - You were selected as a nearest helper!',
+    subject: 'SOS Alert - You were selected as a nearest helper!',
     html: `
       <p>Hi <b>${safeHelperName}</b>,</p>
       <p><b>${safeSenderName}</b> (<a href="mailto:${safeSenderEmail}">${safeSenderEmail}</a>) 
          has selected you as the nearest helper via the Women Safety App.</p>
       <p>Requester location: 
          <a href="${locationURL}" target="_blank" rel="noopener noreferrer">
-         ?? Open Directions in Google Maps
+          Open Directions in Google Maps
          </a>
       </p>
       <p><b>Time:</b> ${timeIST}</p>
