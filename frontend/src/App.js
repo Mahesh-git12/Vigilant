@@ -1,4 +1,6 @@
-import React from 'react';
+
+
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -14,13 +16,17 @@ import ProtectedRoute from './components/ProtectedRoute';
 import SOSButton from './components/SOSButton';
 import TrackIncident from './pages/TrackIncident';
 import FindHelperButton from './components/FindHelperButton';
-import { AppBar, Toolbar, Button, Box, Avatar, IconButton, Drawer, List, ListItem, ListItemText, Divider, Typography } from '@mui/material';
+import VoiceListener from './components/VoiceListener';
+import VoiceSOSConsentModal from './components/VoiceSOSConsentModal';
+import VoiceSOSFab from './components/VoiceSOSFab';
+import { AppBar, Toolbar, Button, Box, Avatar, Snackbar, Alert, IconButton, Drawer, List, ListItem, ListItemText, Divider, Typography } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import MenuIcon from '@mui/icons-material/Menu';
 import SafetyResources from './pages/SafetyResources';
+import axios from "axios";
 
 function ResponsiveAppBar({ isLoggedIn, handleLogout }) {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggleDrawer = (open) => () => {
@@ -102,6 +108,7 @@ function ResponsiveAppBar({ isLoggedIn, handleLogout }) {
             Vigilant
           </Typography>
 
+          {/* Desktop nav buttons */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
             {!isLoggedIn ? (
               <>
@@ -146,6 +153,7 @@ function ResponsiveAppBar({ isLoggedIn, handleLogout }) {
             )}
           </Box>
 
+          {/* Mobile hamburger menu */}
           {isLoggedIn && (
             <IconButton
               color="primary"
@@ -168,6 +176,39 @@ function ResponsiveAppBar({ isLoggedIn, handleLogout }) {
 
 function App() {
   const isLoggedIn = !!localStorage.getItem('token');
+
+  const [voiceConsent, setVoiceConsent] = useState(() => localStorage.getItem('voiceSOSConsent') === 'true');
+  const [listening, setListening] = useState(false);
+  const [feedback, setFeedback] = useState('');
+  const [open, setOpen] = useState(false);
+
+  const handleAllowVoiceSOS = () => {
+    setVoiceConsent(true);
+    localStorage.setItem('voiceSOSConsent', 'true');
+    setListening(true);
+  };
+
+  const handleDenyVoiceSOS = () => {
+    setVoiceConsent(false);
+    localStorage.setItem('voiceSOSConsent', 'false');
+    setListening(false);
+  };
+
+  const toggleVoiceSOS = () => {
+    setListening((prev) => !prev);
+  };
+
+  const handleSendSOS = async () => {
+    try {
+      await axios.post("/api/incidents/sos", {/* your SOS payload here */});
+      setFeedback('SOS sent! Your selected contacts have been notified.');
+      setOpen(true);
+    } catch (error) {
+      setFeedback('Failed to send SOS.');
+      setOpen(true);
+      console.error('SOS error:', error);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -193,10 +234,20 @@ function App() {
           px: 0,
         }}
       >
+        {!voiceConsent && isLoggedIn && (
+          <VoiceSOSConsentModal
+            open={!voiceConsent}
+            onAllow={handleAllowVoiceSOS}
+            onDeny={handleDenyVoiceSOS}
+          />
+        )}
+
         {isLoggedIn && (
           <>
             <SOSButton sx={{ position: 'fixed', bottom: 32, right: 32, zIndex: 1200 }} />
             <FindHelperButton sx={{ position: 'fixed', bottom: 100, right: 32, zIndex: 1300 }} />
+            <VoiceSOSFab listening={listening} onToggle={toggleVoiceSOS} sx={{ position: 'fixed', bottom: 170, right: 32, zIndex: 1400 }} />
+            {listening && <VoiceListener onTrigger={handleSendSOS} setFeedback={setFeedback} setOpen={setOpen} sx={{ position: 'fixed', bottom: 210, right: 32, zIndex: 1400 }} />}
           </>
         )}
 
@@ -214,6 +265,12 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/resources" element={<SafetyResources />} />
         </Routes>
+
+        <Snackbar open={open} autoHideDuration={4000} onClose={() => setOpen(false)}>
+          <Alert severity={feedback.startsWith('Failed') ? 'error' : 'success'} sx={{ width: '100%' }}>
+            {feedback}
+          </Alert>
+        </Snackbar>
       </Box>
     </Router>
   );
