@@ -1,41 +1,4 @@
 
-// const mongoose = require('mongoose');
-
-// const userSchema = new mongoose.Schema({
-//   name: { type: String, required: true },
-//   email: { type: String, required: true, unique: true },
-//   password: { type: String, required: true },
-//   emergencyContacts: [
-//     {
-//       name: String,
-//       phone: String,
-//       relation: String,
-//     },
-//   ],
-//   location: {
-//     type: { type: String, enum: ['Point'], default: 'Point' },
-//     coordinates: { type: [Number], required: true }, // [longitude, latitude]
-//   },
-//   avatarUrl: String,
-//   notifications: [
-//     {
-//       message: String,
-//       title: String,
-//       fromUserId: mongoose.Schema.Types.ObjectId,
-//       fromUserName: String,
-//       fromUserEmail: String,
-//       location: { latitude: Number, longitude: Number },
-//       date: Date,
-//     },
-//   ],
-//   resetPasswordToken: String, // <--- NEW
-//   resetPasswordExpires: Date, // <--- NEW
-// });
-
-// userSchema.index({ location: '2dsphere' });
-
-// module.exports = mongoose.model('User', userSchema);
-
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -68,3 +31,36 @@ const userSchema = new mongoose.Schema({
 userSchema.index({ location: '2dsphere' });
 
 module.exports = mongoose.model('User', userSchema);
+
+// const mongoose = require('mongoose');
+
+// const userSchema = new mongoose.Schema({
+//   name: String,
+//   email: { type: String, unique: true, required: true },
+//   password: String,
+//   location: {
+//     type: { type: String, enum: ['Point'], default: 'Point', required: true },
+//     coordinates: { type: [Number], required: true } // [longitude, latitude]
+//   },
+//   emergencyContacts: [{ email: String, phone: String }],
+//   notifications: [
+//     {
+//       message: String,
+//       title: String,
+//       fromUserId: mongoose.Schema.Types.ObjectId,
+//       fromUserName: String,
+//       fromUserEmail: String,
+//       location: {
+//         latitude: Number,
+//         longitude: Number
+//       },
+//       date: Date
+//     }
+//   ]
+// });
+
+// // 2dsphere index for geospatial queries
+// userSchema.index({ location: '2dsphere' });
+
+// module.exports = mongoose.model('User', userSchema);
+
