@@ -45,15 +45,15 @@ app.get('/notifications', (req, res) => {
 
 // ? FIXED Mongoose connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('? MongoDB Atlas connected'))
-  .catch((err) => console.error('? MongoDB connection error:', err));
+  .then(() => console.log('MongoDB Atlas connected'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 app.get('/', (req, res) => {
   res.send('Women Safety App Backend is running');
 });
 
 app.listen(PORT, () => {
-  console.log(`?? Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
 
