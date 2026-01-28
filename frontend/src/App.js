@@ -18,10 +18,13 @@ import { AppBar, Toolbar, Button, Box, Avatar, IconButton, Drawer, List, ListIte
 import SecurityIcon from '@mui/icons-material/Security';
 import MenuIcon from '@mui/icons-material/Menu';
 import SafetyResources from './pages/SafetyResources';
+<<<<<<< HEAD
 
 // --- NEW IMPORTS FOR ML MODEL ---
 import Dashboard from './pages/Dashboard'; 
 // --------------------------------
+=======
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
 
 function ResponsiveAppBar({ isLoggedIn, handleLogout }) {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -218,12 +221,15 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/track/:incidentId" element={<TrackIncident />} />
           <Route path="/resources" element={<SafetyResources />} />
+<<<<<<< HEAD
           
           {/* --- NEW ML SAFETY ROUTE --- */}
           <Route path="/safety-check" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           {/* --------------------------- */}
 
           <Route path="*" element={<NotFound />} />
+=======
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
         </Routes>
       </Box>
     </Router>
@@ -232,7 +238,12 @@ function App() {
 
 export default App;
 
+<<<<<<< HEAD
 // import React from 'react';
+=======
+
+// import React, { useState } from 'react';
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
 // import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 // import Register from './pages/Register';
 // import Login from './pages/Login';
@@ -248,6 +259,7 @@ export default App;
 // import SOSButton from './components/SOSButton';
 // import TrackIncident from './pages/TrackIncident';
 // import FindHelperButton from './components/FindHelperButton';
+<<<<<<< HEAD
 // import { AppBar, Toolbar, Button, Box, Avatar, IconButton, Drawer, List, ListItem, ListItemText, Divider, Typography } from '@mui/material';
 // import SecurityIcon from '@mui/icons-material/Security';
 // import MenuIcon from '@mui/icons-material/Menu';
@@ -256,6 +268,19 @@ export default App;
 
 // function ResponsiveAppBar({ isLoggedIn, handleLogout }) {
 //   const [drawerOpen, setDrawerOpen] = React.useState(false);
+=======
+// import VoiceListener from './components/VoiceListener';
+// import VoiceSOSConsentModal from './components/VoiceSOSConsentModal';
+// import VoiceSOSFab from './components/VoiceSOSFab';
+// import { AppBar, Toolbar, Button, Box, Avatar, Snackbar, Alert, IconButton, Drawer, List, ListItem, ListItemText, Divider, Typography } from '@mui/material';
+// import SecurityIcon from '@mui/icons-material/Security';
+// import MenuIcon from '@mui/icons-material/Menu';
+// import SafetyResources from './pages/SafetyResources';
+// import axios from "axios";
+
+// function ResponsiveAppBar({ isLoggedIn, handleLogout }) {
+//   const [drawerOpen, setDrawerOpen] = useState(false);
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
 //   const navigate = useNavigate();
 
 //   const toggleDrawer = (open) => () => {
@@ -337,6 +362,10 @@ export default App;
 //             Vigilant
 //           </Typography>
 
+<<<<<<< HEAD
+=======
+//           {/* Desktop nav buttons */}
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
 //           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
 //             {!isLoggedIn ? (
 //               <>
@@ -381,6 +410,10 @@ export default App;
 //             )}
 //           </Box>
 
+<<<<<<< HEAD
+=======
+//           {/* Mobile hamburger menu */}
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
 //           {isLoggedIn && (
 //             <IconButton
 //               color="primary"
@@ -404,6 +437,42 @@ export default App;
 // function App() {
 //   const isLoggedIn = !!localStorage.getItem('token');
 
+<<<<<<< HEAD
+=======
+//   const [voiceConsent, setVoiceConsent] = useState(() => localStorage.getItem('voiceSOSConsent') === 'true');
+//   const [listening, setListening] = useState(false);
+//   const [feedback, setFeedback] = useState('');
+//   const [open, setOpen] = useState(false);
+
+//   const handleAllowVoiceSOS = () => {
+//     setVoiceConsent(true);
+//     localStorage.setItem('voiceSOSConsent', 'true');
+//     setListening(true);
+//   };
+
+//   const handleDenyVoiceSOS = () => {
+//     setVoiceConsent(false);
+//     localStorage.setItem('voiceSOSConsent', 'false');
+//     setListening(false);
+//   };
+
+//   const toggleVoiceSOS = () => {
+//     setListening((prev) => !prev);
+//   };
+
+//   const handleSendSOS = async () => {
+//     try {
+//       await axios.post("/api/incidents/sos", {/* your SOS payload here */});
+//       setFeedback('SOS sent! Your selected contacts have been notified.');
+//       setOpen(true);
+//     } catch (error) {
+//       setFeedback('Failed to send SOS.');
+//       setOpen(true);
+//       console.error('SOS error:', error);
+//     }
+//   };
+
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
 //   const handleLogout = () => {
 //     localStorage.removeItem('token');
 //     window.location.href = '/login';
@@ -428,10 +497,26 @@ export default App;
 //           px: 0,
 //         }}
 //       >
+<<<<<<< HEAD
+=======
+//         {!voiceConsent && isLoggedIn && (
+//           <VoiceSOSConsentModal
+//             open={!voiceConsent}
+//             onAllow={handleAllowVoiceSOS}
+//             onDeny={handleDenyVoiceSOS}
+//           />
+//         )}
+
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
 //         {isLoggedIn && (
 //           <>
 //             <SOSButton sx={{ position: 'fixed', bottom: 32, right: 32, zIndex: 1200 }} />
 //             <FindHelperButton sx={{ position: 'fixed', bottom: 100, right: 32, zIndex: 1300 }} />
+<<<<<<< HEAD
+=======
+//             <VoiceSOSFab listening={listening} onToggle={toggleVoiceSOS} sx={{ position: 'fixed', bottom: 170, right: 32, zIndex: 1400 }} />
+//             {listening && <VoiceListener onTrigger={handleSendSOS} setFeedback={setFeedback} setOpen={setOpen} sx={{ position: 'fixed', bottom: 210, right: 32, zIndex: 1400 }} />}
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
 //           </>
 //         )}
 
@@ -449,10 +534,22 @@ export default App;
 //           <Route path="*" element={<NotFound />} />
 //           <Route path="/resources" element={<SafetyResources />} />
 //         </Routes>
+<<<<<<< HEAD
+=======
+
+//         <Snackbar open={open} autoHideDuration={4000} onClose={() => setOpen(false)}>
+//           <Alert severity={feedback.startsWith('Failed') ? 'error' : 'success'} sx={{ width: '100%' }}>
+//             {feedback}
+//           </Alert>
+//         </Snackbar>
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
 //       </Box>
 //     </Router>
 //   );
 // }
 
 // export default App;
+<<<<<<< HEAD
 
+=======
+>>>>>>> f49171856fdedfda78c2209ae274135e2b02ed7c
