@@ -19,6 +19,7 @@ const sendNearestUserEmailNotification = require('../utils/sendNearestUserEmail'
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
+
 // Emergency contacts and profile
 router.get('/emergency-contacts', authMiddleware, getEmergencyContacts);
 router.put('/emergency-contacts', authMiddleware, updateEmergencyContacts);

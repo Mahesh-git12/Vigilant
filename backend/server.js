@@ -6,6 +6,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const incidentRoutes = require('./routes/incidentRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
+const safetyRoutes = require('./routes/safetyRoutes');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -21,19 +22,27 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error('Not allowed by CORS'));
   },
+
   credentials: true
 }));
 
-app.use(express.json());
 
+app.use(express.json());  //middleware
 app.use('/api/users', userRoutes);
 app.use('/api/incidents', incidentRoutes);
+app.use('/api/safety', safetyRoutes);
 
 // Serve avatar uploads statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
 //Resources 
 app.use('/api/resources', resourceRoutes);
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+
 // Sample Notifications
 app.get('/notifications', (req, res) => {
   const notifications = [
@@ -43,11 +52,12 @@ app.get('/notifications', (req, res) => {
   res.json({ notifications });
 });
 
+
 // ? FIXED Mongoose connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('? MongoDB Atlas connected'))
+  .then(() => console.log('MongoDB Atlas connected Sucessfully'))
   .catch((err) => console.error('MongoDB connection error:', err));
-
+  
 app.get('/', (req, res) => {
   res.send('Women Safety App Backend is running');
 });
@@ -57,6 +67,7 @@ app.listen(PORT, () => {
 });
 
 
+
 // require('dotenv').config();
 // const express = require('express');
 // const mongoose = require('mongoose');
@@ -64,7 +75,8 @@ app.listen(PORT, () => {
 
 // const userRoutes = require('./routes/userRoutes');
 // const incidentRoutes = require('./routes/incidentRoutes');
-
+// const resourceRoutes = require('./routes/resourceRoutes');
+// const path = require('path');
 // const app = express();
 // const PORT = process.env.PORT || 4000;
 
@@ -79,13 +91,24 @@ app.listen(PORT, () => {
 //     if (allowedOrigins.includes(origin)) return callback(null, true);
 //     return callback(new Error('Not allowed by CORS'));
 //   },
+
 //   credentials: true
 // }));
 
-// app.use(express.json());
 
+// app.use(express.json());  //middleware
 // app.use('/api/users', userRoutes);
 // app.use('/api/incidents', incidentRoutes);
+
+
+// // Serve avatar uploads statically
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
+// //Resources 
+// app.use('/api/resources', resourceRoutes);
+
+
 
 // // Sample Notifications
 // app.get('/notifications', (req, res) => {
@@ -96,15 +119,20 @@ app.listen(PORT, () => {
 //   res.json({ notifications });
 // });
 
+
 // // ? FIXED Mongoose connection
 // mongoose.connect(process.env.MONGO_URI)
-//   .then(() => console.log('? MongoDB Atlas connected'))
-//   .catch((err) => console.error('? MongoDB connection error:', err));
-
+//   .then(() => console.log('MongoDB Atlas connected Sucessfully'))
+//   .catch((err) => console.error('MongoDB connection error:', err));
+  
 // app.get('/', (req, res) => {
 //   res.send('Women Safety App Backend is running');
 // });
 
 // app.listen(PORT, () => {
-//   console.log(`?? Server running on port ${PORT}`);
+//   console.log(` Server running on port ${PORT}`);
 // });
+
+
+
+
