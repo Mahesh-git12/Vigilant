@@ -24,6 +24,7 @@
     "multer": "^2.0.2",
     "nodemailer": "^7.0.3",
     "react-leaflet": "^5.0.0",
+    "resend": "^6.9.4",
     "twilio": "^5.7.1"
   },
   "devDependencies": {
