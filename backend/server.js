@@ -17,28 +17,21 @@ const PORT = process.env.PORT || 4000;
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:4000',
-  'https://vigilant-wwki.vercel.app',
-  process.env.FRONTEND_URL
+  'https://women-safety-app-new.vercel.app',         // ✅ your main Vercel domain
+  'https://vigilant-wwki.vercel.app',                 // ✅ keep old one just in case
+  process.env.FRONTEND_URL                            // from Render env vars
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // 1. Allow requests with no origin (like mobile apps or Postman)
+    // Allow requests with no origin (Postman, mobile apps)
     if (!origin) return callback(null, true);
 
-    // ✅ DEBUG LOGS — paste these Render logs here so we can see exact origin
-    console.log('Incoming origin:', JSON.stringify(origin));
-    console.log('Allowed origins:', JSON.stringify(allowedOrigins));
-
-    // 2. Check if it's in the hardcoded list
+    // Exact match check
     const isExplicitlyAllowed = allowedOrigins.includes(origin);
 
-    // 3. Check if it's any Vercel domain starting with your project name
-    const isVercelDomain =
-      origin.startsWith('https://vigilant-wwki') && origin.endsWith('.vercel.app');
-
-    console.log('isExplicitlyAllowed:', isExplicitlyAllowed);
-    console.log('isVercelDomain:', isVercelDomain);
+    // ✅ Allow ANY vercel.app subdomain for your project (covers preview deploys)
+    const isVercelDomain = origin.endsWith('.vercel.app');
 
     if (isExplicitlyAllowed || isVercelDomain) {
       callback(null, true);
@@ -52,7 +45,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// ✅ Preflight handler — compatible with Express 5
+// ✅ Preflight handler — Express 5 compatible
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
@@ -64,7 +57,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// --- MIDDLEWARE (Set limits BEFORE routes) ---
+// --- MIDDLEWARE ---
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
