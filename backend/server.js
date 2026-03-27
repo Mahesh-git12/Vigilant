@@ -2,137 +2,183 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
+// Route Imports
 const userRoutes = require('./routes/userRoutes');
 const incidentRoutes = require('./routes/incidentRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const safetyRoutes = require('./routes/safetyRoutes');
-const path = require('path');
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Allow CORS from frontend
+// --- DYNAMIC CORS CONFIGURATION ---
 const allowedOrigins = [
   'http://localhost:3000',
+  'http://localhost:4000',
+  'https://vigilant-wwki.vercel.app',
   process.env.FRONTEND_URL
 ];
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
-  },
 
-  credentials: true
+app.use(cors({
+  origin: function (origin, callback) {
+    // 1. Allow requests with no origin (like mobile apps or Postman)
+    if (!origin) return callback(null, true);
+
+    // ✅ DEBUG LOGS — paste these Render logs here so we can see exact origin
+    console.log('Incoming origin:', JSON.stringify(origin));
+    console.log('Allowed origins:', JSON.stringify(allowedOrigins));
+
+    // 2. Check if it's in the hardcoded list
+    const isExplicitlyAllowed = allowedOrigins.includes(origin);
+
+    // 3. Check if it's any Vercel domain starting with your project name
+    const isVercelDomain =
+      origin.startsWith('https://vigilant-wwki') && origin.endsWith('.vercel.app');
+
+    console.log('isExplicitlyAllowed:', isExplicitlyAllowed);
+    console.log('isVercelDomain:', isVercelDomain);
+
+    if (isExplicitlyAllowed || isVercelDomain) {
+      callback(null, true);
+    } else {
+      console.error(`CORS Blocked: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// ✅ Preflight handler — compatible with Express 5
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    return res.sendStatus(204);
+  }
+  next();
+});
 
-app.use(express.json());  //middleware
-app.use('/api/users', userRoutes);
-app.use('/api/incidents', incidentRoutes);
-app.use('/api/safety', safetyRoutes);
-
-// Serve avatar uploads statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-
-//Resources 
-app.use('/api/resources', resourceRoutes);
-
+// --- MIDDLEWARE (Set limits BEFORE routes) ---
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
+// --- ROUTES ---
+app.use('/api/users', userRoutes);
+app.use('/api/incidents', incidentRoutes);
+app.use('/api/safety', safetyRoutes);
+app.use('/api/resources', resourceRoutes);
 
-// Sample Notifications
-app.get('/notifications', (req, res) => {
+// Static files for uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Sample Notifications Endpoint
+app.get('/api/notifications', (req, res) => {
   const notifications = [
-    { _id: '1', title: 'Welcome to Vigilant', message: 'Thanks for joining!' },
-    { _id: '2', title: 'New Alert', message: 'You have received a new notification.' }
+    { _id: '1', title: 'Welcome to Vigilant', message: 'The AI Safety system is active.' },
+    { _id: '2', title: 'Security Tip', message: 'Keep your emergency contacts updated.' }
   ];
   res.json({ notifications });
 });
 
-
-// ? FIXED Mongoose connection
+// --- DATABASE CONNECTION ---
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB Atlas connected Sucessfully'))
-  .catch((err) => console.error('MongoDB connection error:', err));
-  
+  .then(() => console.log('✅ MongoDB Atlas connected successfully'))
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
+
+// Root Endpoint
 app.get('/', (req, res) => {
-  res.send('Women Safety App Backend is running');
+  res.send('Vigilant Women Safety API is running...');
 });
 
+// Start Server
 app.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
-
-
-
 // require('dotenv').config();
 // const express = require('express');
 // const mongoose = require('mongoose');
 // const cors = require('cors');
+// const path = require('path');
 
+// // Route Imports
 // const userRoutes = require('./routes/userRoutes');
 // const incidentRoutes = require('./routes/incidentRoutes');
 // const resourceRoutes = require('./routes/resourceRoutes');
-// const path = require('path');
+// const safetyRoutes = require('./routes/safetyRoutes');
+
 // const app = express();
 // const PORT = process.env.PORT || 4000;
 
-// // Allow CORS from frontend
+// // --- DYNAMIC CORS CONFIGURATION ---
 // const allowedOrigins = [
 //   'http://localhost:3000',
-//   process.env.FRONTEND_URL
+//   'http://localhost:4000',
+//   process.env.FRONTEND_URL // https://vigilant-wwki.vercel.app
 // ];
-// app.use(cors({
-//   origin: function(origin, callback) {
-//     if (!origin) return callback(null, true);
-//     if (allowedOrigins.includes(origin)) return callback(null, true);
-//     return callback(new Error('Not allowed by CORS'));
-//   },
 
-//   credentials: true
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     // 1. Allow requests with no origin (like mobile apps or Postman)
+//     if (!origin) return callback(null, true);
+
+//     // 2. Check if it's in the hardcoded list
+//     const isExplicitlyAllowed = allowedOrigins.includes(origin);
+
+//     // 3. Check if it's any Vercel domain starting with your project name
+//     // This allows your 3 different Vercel preview/git domains to work
+//     const isVercelDomain = origin.startsWith('https://vigilant-wwki') && origin.endsWith('vercel.app');
+
+//     if (isExplicitlyAllowed || isVercelDomain) {
+//       callback(null, true);
+//     } else {
+//       console.error(`CORS Blocked: ${origin}`);
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
 // }));
 
+// // --- MIDDLEWARE (Set limits BEFORE routes) ---
+// app.use(express.json({ limit: '10mb' }));
+// app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// app.use(express.json());  //middleware
+// // --- ROUTES ---
 // app.use('/api/users', userRoutes);
 // app.use('/api/incidents', incidentRoutes);
-
-
-// // Serve avatar uploads statically
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-
-// //Resources 
+// app.use('/api/safety', safetyRoutes);
 // app.use('/api/resources', resourceRoutes);
 
+// // Static files for uploads
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
-// // Sample Notifications
-// app.get('/notifications', (req, res) => {
+// // Sample Notifications Endpoint
+// app.get('/api/notifications', (req, res) => {
 //   const notifications = [
-//     { _id: '1', title: 'Welcome to Vigilant', message: 'Thanks for joining!' },
-//     { _id: '2', title: 'New Alert', message: 'You have received a new notification.' }
+//     { _id: '1', title: 'Welcome to Vigilant', message: 'The AI Safety system is active.' },
+//     { _id: '2', title: 'Security Tip', message: 'Keep your emergency contacts updated.' }
 //   ];
 //   res.json({ notifications });
 // });
 
-
-// // ? FIXED Mongoose connection
+// // --- DATABASE CONNECTION ---
 // mongoose.connect(process.env.MONGO_URI)
-//   .then(() => console.log('MongoDB Atlas connected Sucessfully'))
-//   .catch((err) => console.error('MongoDB connection error:', err));
-  
+//   .then(() => console.log('✅ MongoDB Atlas connected successfully'))
+//   .catch((err) => console.error('❌ MongoDB connection error:', err));
+
+// // Root Endpoint
 // app.get('/', (req, res) => {
-//   res.send('Women Safety App Backend is running');
+//   res.send('Vigilant Women Safety API is running...');
 // });
 
+// // Start Server
 // app.listen(PORT, () => {
-//   console.log(` Server running on port ${PORT}`);
+//   console.log(`🚀 Server running on port ${PORT}`);
 // });
-
-
-
-
