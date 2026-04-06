@@ -1,0 +1,26 @@
+/**
+ * @example
+ *     {
+ *         pid: "pid",
+ *         contact_id: 1,
+ *         balance_definition_id: "balance_definition_id"
+ *     }
+ */
+export interface GetLoyaltyBalanceProgramsPidActiveBalanceRequest {
+    /** Loyalty Program Id */
+    pid: string;
+    /** Limit */
+    limit?: number;
+    /** Offset */
+    offset?: number;
+    /** Sort Field */
+    sort_field?: string;
+    /** Sort Order */
+    sort?: string;
+    /** Contact ID */
+    contact_id: number;
+    /** Balance Definition ID */
+    balance_definition_id: string;
+    /** Include balances tied to internal definitions. */
+    includeInternal?: boolean;
+}

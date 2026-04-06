@@ -1,0 +1,31 @@
+import type * as Brevo from "../../../../index.js";
+/**
+ * @example
+ *     {
+ *         pid: "pid",
+ *         contactId: 1,
+ *         balanceDefinitionId: "balanceDefinitionId"
+ *     }
+ */
+export interface GetLoyaltyBalanceProgramsPidTransactionHistoryRequest {
+    /** Loyalty Program Id */
+    pid: string;
+    /** Limit the number of records returned */
+    limit?: number;
+    /** Page number to retrieve */
+    offset?: number;
+    /** Field to sort by */
+    sortField?: "createdAt";
+    /** Sort order, either asc or desc */
+    sort?: Brevo.GetLoyaltyBalanceProgramsPidTransactionHistoryRequestSort;
+    /** Contact ID */
+    contactId: number;
+    /** Balance Definition ID */
+    balanceDefinitionId: string;
+    /** Filters to apply */
+    filters?: string | string[];
+    /** Transaction status filter. Allowed values: draft, completed, rejected, cancelled, expired */
+    status?: Brevo.GetLoyaltyBalanceProgramsPidTransactionHistoryRequestStatus;
+    /** Transaction type filter. Allowed values: credit, debit */
+    transactionType?: Brevo.GetLoyaltyBalanceProgramsPidTransactionHistoryRequestTransactionType;
+}
