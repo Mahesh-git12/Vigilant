@@ -24,7 +24,7 @@ A modern web and mobile safety platform for quick emergency alerting, trusted co
 
 ## Live Demo
 
-[https://women-safety-app-new.vercel.app](https://women-safety-app-new.vercel.app)
+[https://women-safety-app-new.vercel.app](https://vigilantapp.vercel.app/)
 
 ---
 
