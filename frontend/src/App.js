@@ -250,6 +250,7 @@ import TrackIncident from './pages/TrackIncident';
 // SOSButton and FindHelperButton are now embedded directly inside HomePage — no floating buttons needed
 import SafetyResources from './pages/SafetyResources';
 import Dashboard from './pages/Dashboard';
+import AuthCallback from './pages/AuthCallback';
 
 // ── Navbar CSS injected once ──────────────────────────────────────────────────
 const navCSS = `
@@ -573,6 +574,7 @@ function App() {
           <Route path="/resources"          element={<SafetyResources />} />
           <Route path="/safety-check"       element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="*"                   element={<NotFound />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
         </Routes>
       </div>
     </Router>
