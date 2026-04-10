@@ -95,19 +95,108 @@
 // });
 
 
+// require('dotenv').config();
+// const express  = require('express');
+// const mongoose = require('mongoose');
+// const cors     = require('cors');
+// const path     = require('path');
+// const passport = require('./config/passport'); // ← NEW
+
+// // Route Imports
+// const userRoutes     = require('./routes/userRoutes');
+// const incidentRoutes = require('./routes/incidentRoutes');
+// const resourceRoutes = require('./routes/resourceRoutes');
+// const safetyRoutes   = require('./routes/safetyRoutes');
+// const authRoutes     = require('./routes/authRoutes'); // ← NEW
+
+// const app  = express();
+// const PORT = process.env.PORT || 4000;
+
+// // ── CORS ──────────────────────────────────────────────────────────────────────
+// const allowedOrigins = [
+//   'http://localhost:3000',
+//   'http://localhost:4000',
+//   'https://women-safety-app-new.vercel.app',
+//   'https://vigilant-wwki.vercel.app',
+//   process.env.FRONTEND_URL,
+// ].filter(Boolean);
+
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     if (!origin) return callback(null, true);
+//     const ok = allowedOrigins.includes(origin) || origin.endsWith('.vercel.app');
+//     if (ok) return callback(null, true);
+//     console.error(`CORS Blocked: ${origin}`);
+//     callback(new Error('Not allowed by CORS'));
+//   },
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+// // Preflight
+// app.use((req, res, next) => {
+//   if (req.method === 'OPTIONS') {
+//     res.header('Access-Control-Allow-Origin',      req.headers.origin);
+//     res.header('Access-Control-Allow-Methods',     'GET,POST,PUT,DELETE,OPTIONS');
+//     res.header('Access-Control-Allow-Headers',     'Content-Type, Authorization');
+//     res.header('Access-Control-Allow-Credentials', 'true');
+//     return res.sendStatus(204);
+//   }
+//   next();
+// });
+
+// // ── MIDDLEWARE ────────────────────────────────────────────────────────────────
+// app.use(express.json({ limit: '10mb' }));
+// app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// // Passport (stateless — no session needed; we use JWT)
+// app.use(passport.initialize());
+
+// // ── ROUTES ────────────────────────────────────────────────────────────────────
+// app.use('/auth', authRoutes); // Only one instance of this!
+// app.use('/api/users', userRoutes);
+// app.use('/api/incidents', incidentRoutes);
+// app.use('/api/safety', safetyRoutes);
+// app.use('/api/resources', resourceRoutes);
+
+
+// // Static uploads
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// // Sample notifications
+// app.get('/api/notifications', (req, res) => {
+//   res.json({
+//     notifications: [
+//       { _id: '1', title: 'Welcome to Vigilant', message: 'The AI Safety system is active.' },
+//       { _id: '2', title: 'Security Tip',        message: 'Keep your emergency contacts updated.' },
+//     ],
+//   });
+// });
+
+// // ── DATABASE ──────────────────────────────────────────────────────────────────
+// mongoose.connect(process.env.MONGO_URI)
+//   .then(() => console.log('✅ MongoDB Atlas connected'))
+//   .catch(err => console.error('❌ MongoDB error:', err));
+
+// app.get('/', (req, res) => res.send('Vigilant Women Safety API is running...'));
+
+// app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+
 require('dotenv').config();
 const express  = require('express');
 const mongoose = require('mongoose');
 const cors     = require('cors');
 const path     = require('path');
-const passport = require('./config/passport'); // ← NEW
+const passport = require('./config/passport');
 
-// Route Imports
+// Routes
 const userRoutes     = require('./routes/userRoutes');
 const incidentRoutes = require('./routes/incidentRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const safetyRoutes   = require('./routes/safetyRoutes');
-const authRoutes     = require('./routes/authRoutes'); // ← NEW
+const authRoutes     = require('./routes/authRoutes');
 
 const app  = express();
 const PORT = process.env.PORT || 4000;
@@ -116,18 +205,19 @@ const PORT = process.env.PORT || 4000;
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:4000',
+  'https://vigilantapp.vercel.app',            // ✅ your ACTUAL production frontend
   'https://women-safety-app-new.vercel.app',
   'https://vigilant-wwki.vercel.app',
-  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL,                    // from Render env vars
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true);   // Postman / mobile
     const ok = allowedOrigins.includes(origin) || origin.endsWith('.vercel.app');
     if (ok) return callback(null, true);
     console.error(`CORS Blocked: ${origin}`);
-    callback(new Error('Not allowed by CORS'));
+    callback(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -137,7 +227,7 @@ app.use(cors({
 // Preflight
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Origin',      req.headers.origin);
+    res.header('Access-Control-Allow-Origin',      req.headers.origin || '*');
     res.header('Access-Control-Allow-Methods',     'GET,POST,PUT,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers',     'Content-Type, Authorization');
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -146,25 +236,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// ── MIDDLEWARE ────────────────────────────────────────────────────────────────
+// ── Middleware ────────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(passport.initialize());   // JWT-only, no sessions
 
-// Passport (stateless — no session needed; we use JWT)
-app.use(passport.initialize());
-
-// ── ROUTES ────────────────────────────────────────────────────────────────────
-app.use('/auth', authRoutes); // Only one instance of this!
-app.use('/api/users', userRoutes);
+// ── Routes ────────────────────────────────────────────────────────────────────
+app.use('/auth',          authRoutes);
+app.use('/api/users',     userRoutes);
 app.use('/api/incidents', incidentRoutes);
-app.use('/api/safety', safetyRoutes);
+app.use('/api/safety',    safetyRoutes);
 app.use('/api/resources', resourceRoutes);
 
-
-// Static uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Sample notifications
 app.get('/api/notifications', (req, res) => {
   res.json({
     notifications: [
@@ -174,11 +259,11 @@ app.get('/api/notifications', (req, res) => {
   });
 });
 
-// ── DATABASE ──────────────────────────────────────────────────────────────────
+// ── Database ──────────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ MongoDB Atlas connected'))
   .catch(err => console.error('❌ MongoDB error:', err));
 
-app.get('/', (req, res) => res.send('Vigilant Women Safety API is running...'));
+app.get('/', (req, res) => res.send('Vigilant API running ✅'));
 
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
