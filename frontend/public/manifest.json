@@ -1,6 +1,6 @@
 {
   "short_name": "Vigilant",
-  "name": "Vigilant – Women Safety Application",
+  "name": "Vigilant - Women Safety App",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "##ff3366",
-  "background_color": "#ffffff"
+  "theme_color": "#000000",
+  "background_color": "#000000"
 }
